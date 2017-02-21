@@ -1,0 +1,13 @@
+Delivering a letter to your secret crush, without being seen by friends (because peer pressure is terrible)
+
+
+Interactions:
+- Move
+- Hide Letter ()
+- Deliver
+
+Maya:
+- Tables
+- Chairs
+- People()
+- door
