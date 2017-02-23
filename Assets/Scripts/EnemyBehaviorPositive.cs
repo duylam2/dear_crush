@@ -1,29 +1,62 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyBehaviorPositive : MonoBehaviour {
 
-	Ray detectRay;
-	public float detectRange;
-
+	// variables for rotating
 	public float rotateLimit1;
 	public float rotateLimit2;
 	public float rotateSpeed;
-
 	Vector3 enemyRotation;
 
+	// variables for rotating pause
 	bool pauseRotate = false;
 	float timePaused;
 
-	int detectTimer = 0;
-	public Transform player;
+	// variables for raycast
+	Ray detectRay;
+	public float detectRange;
 
-	[SerializeField] int detectionState = 0;
+	float detectTimer = 0;
+	public Transform player;
+	public float detectWaitTime;
+	public float detectCooldown;
+
+	//[SerializeField] int detectionState = 0;
+
+	public enum State {
+		notSeeYou,
+		seeYou,
+		detectYou
+	}
+
+	public State state;
+	public bool sawPlayer = false;
+	public bool detectedPlayer = false;
 
 	// Use this for initialization
 	void Start () {
-		
+		state = EnemyBehaviorPositive.State.notSeeYou;
+		StartCoroutine ("FSM");
+	}
+
+	IEnumerator FSM(){
+		while (true) {
+			switch (state) {
+			case State.notSeeYou:
+				notSeeYou ();
+				break;
+			case State.seeYou:
+				seeYou ();
+				break;
+			case State.detectYou:
+				detectYou ();
+				break;
+			}
+			yield return null;
+		}
 	}
 
 	void FixedUpdate(){
@@ -40,26 +73,41 @@ public class EnemyBehaviorPositive : MonoBehaviour {
 			//Debug.Log (Vector3.Angle (this.transform.forward, directionToPlayer));
 			RaycastHit hit;
 			detectRay = new Ray (this.transform.position, directionToPlayer);
-			Debug.DrawRay (detectRay.origin, detectRay.direction * 10f, Color.red);
-			if (Physics.Raycast (detectRay, out hit, detectRange) == true) {
+			Debug.DrawRay (detectRay.origin, detectRay.direction * detectRange, Color.red);
+			if (Physics.Raycast (detectRay, out hit, detectRange) == true && !detectedPlayer) {
 				if (hit.collider.tag == "Player") {
 					Debug.Log ("You are within range!");
-					if (detectionState == 0) {
-						this.GetComponent<MeshRenderer> ().material.color = Color.yellow;
-						detectionState = 1;
-						StartCoroutine (TimerCoroutine ());
-					}
-				} else if (detectionState == 1){
-					detectionState = 3;
+					state = EnemyBehaviorPositive.State.seeYou;
+				} else {
+					sawPlayer = false;
+					state = EnemyBehaviorPositive.State.notSeeYou;
 				}
-			} else if (detectionState == 1){
-				detectionState = 3;
-			}
+//					if (detectionState == 0) {
+//						this.GetComponent<MeshRenderer> ().material.color = Color.yellow;
+//						detectionState = 1;
+//						StartCoroutine (TimerCoroutine ());
+//					}
+//				} else if (detectionState == 1){
+//					detectionState = 3;
+//				}
+//			} else if (detectionState == 1 ){
+//				detectionState = 3;
+//				} else {
+//					sawPlayer = false;
+//					state = EnemyBehaviorPositive.State.notSeeYou;
+//				}
+//			} else {
+//				sawPlayer = false;
+//				state = EnemyBehaviorPositive.State.notSeeYou;
 		}
-
 	}
+}
+
 	// Update is called once per frame
-	void Update () {
+	void notSeeYou () {
+		if (!sawPlayer) {
+			this.GetComponent<MeshRenderer> ().material.color = Color.white;
+		}
 		//enemy rotating at place
 		enemyRotation = GetComponent<Transform>().localEulerAngles;
 
@@ -85,33 +133,81 @@ public class EnemyBehaviorPositive : MonoBehaviour {
 		if (!pauseRotate) {
 			transform.Rotate (0, rotateSpeed * Time.deltaTime, 0);
 		}
+//		Debug.Log("They don't see you!");
 			//Debug.Log (enemyRotation.y);
-		if (detectionState == 2) {
-			Debug.Log ("They've detected you!");
-			this.GetComponent<MeshRenderer> ().material.color = Color.red;
-			//detectionState = 3; //UPDATE A GAMEMANAGER BOOLEAN to tell that YOU'VE LOST
-		}
+//		if (detectionState == 2) {
+//			Debug.Log ("They've detected you!");
+//			this.GetComponent<MeshRenderer> ().material.color = Color.red;
+//			//detectionState = 3; //UPDATE A GAMEMANAGER BOOLEAN to tell that YOU'VE LOST
+//		}
 
 	}
 
-	IEnumerator TimerCoroutine(){
-		while (true) {
-			detectTimer++;
+	void seeYou(){
+		sawPlayer = true;
+		this.GetComponent<MeshRenderer> ().material.color = Color.yellow;
+		StartCoroutine ("SeenCoroutine");
+		//Debug.Log ("They saw you!");
+//		Debug.Log (Time.time);
+//		detectTimer = Time.time + detectWaitTime;
+//		Debug.Log (detectTimer);
+//		if (detectTimer <= Time.time && state == EnemyBehaviorPositive.State.seeYou) {
+//			state = EnemyBehaviorPositive.State.detectYou;
+//			//detectTimer = 0;
+////		} else {
+////			if (detectTimer <= Time.time) {
+////				state = EnemyBehaviorPositive.State.notSeeYou;
+////				sawPlayer = false;
+////				//detectTimer = 0;
+////			}
+//		}
+	}
 
-			yield return new WaitForSeconds (1f);
+	void detectYou(){
+		detectedPlayer = true;
+		this.GetComponent<MeshRenderer> ().material.color = Color.red;
+		Debug.Log ("They detected you!");
+	}
 
-			if (detectTimer >= 2 && detectionState == 1) {
+		IEnumerator SeenCoroutine(){
+			while (true) {
+				detectTimer++;
+				Debug.Log (detectTimer);
+	
+				yield return new WaitForSeconds (1f);
+	
+			if (detectTimer >= detectWaitTime && state == EnemyBehaviorPositive.State.seeYou && sawPlayer) {
 				Debug.Log ("They see you!");
-				detectionState = 2;
+				state  = EnemyBehaviorPositive.State.detectYou;
 				break;
+				}
+//				if (detectTimer >= 2 && detectionState == 3) {
+//					Debug.Log ("They stop looking at you.");
+//					this.GetComponent<MeshRenderer> ().material.color = Color.white;
+//					detectionState = 0;
+//				}
+				//Debug.Log ("Timer ended!");
 			}
-			if (detectTimer >= 3 && detectionState == 3) {
-				Debug.Log ("They stop looking at you.");
-				this.GetComponent<MeshRenderer> ().material.color = Color.white;
-				detectionState = 0;
-			}
-			//Debug.Log ("Timer ended!");
 		}
-	}
+
+//	IEnumerator TimerCoroutine(){
+//		while (true) {
+//			detectTimer++;
+//
+//			yield return new WaitForSeconds (1f);
+//
+//			if (detectTimer >= 3 && detectionState == 1) {
+//				Debug.Log ("They see you!");
+//				detectionState = 2;
+//				break;
+//			}
+//			if (detectTimer >= 2 && detectionState == 3) {
+//				Debug.Log ("They stop looking at you.");
+//				this.GetComponent<MeshRenderer> ().material.color = Color.white;
+//				detectionState = 0;
+//			}
+//			//Debug.Log ("Timer ended!");
+//		}
+//	}
 }
 
