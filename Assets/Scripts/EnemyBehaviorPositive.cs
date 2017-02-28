@@ -23,6 +23,7 @@ public class EnemyBehaviorPositive : MonoBehaviour {
 	public Transform player;
 	public float detectWaitTime;
 	public float detectCooldown;
+	[SerializeField] int numberOfCoroutines = 0;
 
 	//[SerializeField] int detectionState = 0;
 
@@ -39,27 +40,39 @@ public class EnemyBehaviorPositive : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		state = EnemyBehaviorPositive.State.notSeeYou;
-		StartCoroutine ("FSM");
+		//StartCoroutine ("FSM");
 	}
 
-	IEnumerator FSM(){
-		while (true) {
+	void Update() {
+		//while (true) {
+		if (state != EnemyBehaviorPositive.State.detectYou && !detectedPlayer) {
 			switch (state) {
 			case State.notSeeYou:
+				//numberOfCoroutines = 0;
 				notSeeYou ();
 				break;
 			case State.seeYou:
+				//numberOfCoroutines++;
 				seeYou ();
 				break;
+			//break;
+			}
+			//yield return null;
+		} else {
+			switch (state) {
 			case State.detectYou:
+				//numberOfCoroutines = 0;
 				detectYou ();
 				break;
 			}
-			yield return null;
 		}
 	}
 
 	void FixedUpdate(){
+		if (!detectedPlayer) {
+			sawPlayer = false;
+			state = EnemyBehaviorPositive.State.notSeeYou;
+		}
 		//Ray casting in front of enemy, detecting the player if within range
 		//1. calculate vector3 between player and enemy
 		Vector3 directionToPlayer = player.position - this.transform.position;
@@ -69,7 +82,7 @@ public class EnemyBehaviorPositive : MonoBehaviour {
 		//3. if that angle is less than 15, cast a ray
 		//4. if that ray hits something, check the tag of the hit-thing
 		//5. if the hit-thing is the player, debug-log and turn enemy to yellow, and start timer
-		if (Vector3.Angle (this.transform.forward, directionToPlayer) <= 15f) {
+		if (Vector3.Angle (this.transform.forward, directionToPlayer) <= 15f && detectedPlayer == false) {
 			//Debug.Log (Vector3.Angle (this.transform.forward, directionToPlayer));
 			RaycastHit hit;
 			detectRay = new Ray (this.transform.position, directionToPlayer);
@@ -77,9 +90,12 @@ public class EnemyBehaviorPositive : MonoBehaviour {
 			if (Physics.Raycast (detectRay, out hit, detectRange) == true && !detectedPlayer) {
 				if (hit.collider.tag == "Player") {
 					Debug.Log ("You are within range!");
+					sawPlayer = true;
 					state = EnemyBehaviorPositive.State.seeYou;
 				} else {
+					Debug.Log ("You are out of range!");
 					sawPlayer = false;
+					//numberOfCoroutines = 0;
 					state = EnemyBehaviorPositive.State.notSeeYou;
 				}
 //					if (detectionState == 0) {
@@ -105,9 +121,10 @@ public class EnemyBehaviorPositive : MonoBehaviour {
 
 	// Update is called once per frame
 	void notSeeYou () {
-		if (!sawPlayer) {
+		
+		//if (!sawPlayer) {
 			this.GetComponent<MeshRenderer> ().material.color = Color.white;
-		}
+		//}
 		//enemy rotating at place
 		enemyRotation = GetComponent<Transform>().localEulerAngles;
 
@@ -144,9 +161,13 @@ public class EnemyBehaviorPositive : MonoBehaviour {
 	}
 
 	void seeYou(){
-		sawPlayer = true;
+//		sawPlayer = true;
 		this.GetComponent<MeshRenderer> ().material.color = Color.yellow;
-		StartCoroutine ("SeenCoroutine");
+//		if (numberOfCoroutines == 0) {
+			numberOfCoroutines++;
+			StartCoroutine ("SeenCoroutine");
+			
+
 		//Debug.Log ("They saw you!");
 //		Debug.Log (Time.time);
 //		detectTimer = Time.time + detectWaitTime;
@@ -163,32 +184,41 @@ public class EnemyBehaviorPositive : MonoBehaviour {
 //		}
 	}
 
+	IEnumerator SeenCoroutine(){
+		while (true) {
+			//detectTimer++;
+			//				Debug.Log (detectTimer);
+
+			if (!sawPlayer){
+				Debug.Log ("Player is out of range!!");
+				this.GetComponent<MeshRenderer> ().material.color = Color.white;
+				break;
+			}
+
+			yield return new WaitForSeconds (5f);
+
+			if (/*detectTimer >= detectWaitTime &&*/ state == EnemyBehaviorPositive.State.seeYou && sawPlayer) {
+				//				Debug.Log (sawPlayer)s;
+				state  = EnemyBehaviorPositive.State.detectYou;
+				break;
+			}
+		}
+	}
+
 	void detectYou(){
 		detectedPlayer = true;
 		this.GetComponent<MeshRenderer> ().material.color = Color.red;
 		Debug.Log ("They detected you!");
 	}
 
-		IEnumerator SeenCoroutine(){
-			while (true) {
-				detectTimer++;
-				Debug.Log (detectTimer);
-	
-				yield return new WaitForSeconds (1f);
-	
-			if (detectTimer >= detectWaitTime && state == EnemyBehaviorPositive.State.seeYou && sawPlayer) {
-				Debug.Log ("They see you!");
-				state  = EnemyBehaviorPositive.State.detectYou;
-				break;
-				}
+
 //				if (detectTimer >= 2 && detectionState == 3) {
 //					Debug.Log ("They stop looking at you.");
 //					this.GetComponent<MeshRenderer> ().material.color = Color.white;
 //					detectionState = 0;
 //				}
 				//Debug.Log ("Timer ended!");
-			}
-		}
+
 
 //	IEnumerator TimerCoroutine(){
 //		while (true) {

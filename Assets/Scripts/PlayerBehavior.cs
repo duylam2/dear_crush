@@ -24,8 +24,11 @@ public class PlayerBehavior : MonoBehaviour {
 		//charControl.transform.Rotate (0f, horizontal * Time.deltaTime * 90f, 0f);
 		charControl.transform.Rotate (0f, Input.GetAxis ("Mouse X") * Time.deltaTime * 180f, 0f);
 
-//			if (Input.GetKey (KeyCode.Space)) {
-//			playerCol.enabled = false;
-//		}
+		if (Input.GetKey (KeyCode.Space)) {
+			playerCol.enabled = false;
+			Debug.Log ("You hid the letter away!");
+//		} else {
+//			playerCol.enabled = true;
+		}
 	}
 }

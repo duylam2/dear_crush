@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class MouseLock : MonoBehaviour {
 
+	float upDownLook;
+
 	// Use this for initialization
 	void Start () {
 		
@@ -15,5 +17,14 @@ public class MouseLock : MonoBehaviour {
 			Cursor.lockState = CursorLockMode.Locked;
 			Cursor.visible = false;
 		//}
+		float mouseX = Input.GetAxis("Mouse X") * Time.deltaTime * 200f;
+		float mouseY = Input.GetAxis ("Mouse Y") * Time.deltaTime * 100f;
+
+//		transform.Rotate (0f, mouseX, 0f);
+
+		upDownLook -= mouseY;
+		upDownLook = Mathf.Clamp (upDownLook, -45f, 45f);
+
+		transform.localEulerAngles = new Vector3 (upDownLook, transform.localEulerAngles.y, 0f);
 	}
 }
