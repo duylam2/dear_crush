@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TextManager : MonoBehaviour {
+public class TextController : MonoBehaviour {
 	
 	public Text hintText;
 	public GameObject textBox;
@@ -29,5 +29,13 @@ public class TextManager : MonoBehaviour {
 		
 		hintText.text = textLines [currentLine];
 
+	}
+
+	public void DisableTextBox(){
+		textBox.SetActive (false);
+	}
+
+	public void EnableTextBox(){
+		textBox.SetActive (true);
 	}
 }
