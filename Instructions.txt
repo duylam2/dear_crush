@@ -1,0 +1,6 @@
+[keep this doc open for the next player]
+
+WASD or Arrow Keys to Move
+If an enemy sees you, it will turn yellow
+If you stay in its vision for too long, it will turn red, and you will LOSE!
+If an enemy turns red, or the debug log says "You've been detected!", Press R to reload the level (because I don't have an endscreen yet lol)

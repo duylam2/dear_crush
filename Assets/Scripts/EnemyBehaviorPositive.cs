@@ -25,7 +25,8 @@ public class EnemyBehaviorPositive : MonoBehaviour {
 	public float detectCooldown;
 	[SerializeField] int numberOfCoroutines = 0;
 
-	//[SerializeField] int detectionState = 0;
+//	public GameManager theGameManager;
+//	public GameManager gameManagerScript;
 
 	public enum State {
 		notSeeYou,
@@ -140,7 +141,7 @@ public class EnemyBehaviorPositive : MonoBehaviour {
 			timePaused = Time.time;
 		}
 
-		if (timePaused +3f <= Time.time && pauseRotate == true) {
+		if (timePaused +2f <= Time.time && pauseRotate == true) {
 			pauseRotate = false;
 		}
 
@@ -195,7 +196,7 @@ public class EnemyBehaviorPositive : MonoBehaviour {
 				break;
 			}
 
-			yield return new WaitForSeconds (2f);
+			yield return new WaitForSeconds (1.5f);
 
 			if (/*detectTimer >= detectWaitTime &&*/ state == EnemyBehaviorPositive.State.seeYou && sawPlayer) {
 				//				Debug.Log (sawPlayer)s;
