@@ -22,8 +22,10 @@ public class EnterHintBox : MonoBehaviour {
 
 	void OnTriggerEnter(Collider other){
 		if (other.tag == "Player") {
-			textController.EnableTextBox ();
-			textController.currentLine = checkpointNumber;
+			if (textController.currentLine <= checkpointNumber) {
+				textController.EnableTextBox ();
+				textController.currentLine = checkpointNumber;
+			}
 		}
 	}
 

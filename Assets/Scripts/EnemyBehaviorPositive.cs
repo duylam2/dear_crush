@@ -89,11 +89,11 @@ public class EnemyBehaviorPositive : MonoBehaviour {
 			Debug.DrawRay (detectRay.origin, detectRay.direction * detectRange, Color.red);
 			if (Physics.Raycast (detectRay, out hit, detectRange) == true && !detectedPlayer) {
 				if (hit.collider.tag == "Player") {
-					Debug.Log ("You are within range!");
+					//Debug.Log ("You are within range!");
 					sawPlayer = true;
 					state = EnemyBehaviorPositive.State.seeYou;
 				} else {
-					Debug.Log ("You are out of range!");
+					//Debug.Log ("You are out of range!");
 					sawPlayer = false;
 					//numberOfCoroutines = 0;
 					state = EnemyBehaviorPositive.State.notSeeYou;
@@ -190,12 +190,12 @@ public class EnemyBehaviorPositive : MonoBehaviour {
 			//				Debug.Log (detectTimer);
 
 			if (!sawPlayer){
-				Debug.Log ("Player is out of range!!");
+				//Debug.Log ("Player is out of range!!");
 				this.GetComponent<MeshRenderer> ().material.color = Color.white;
 				break;
 			}
 
-			yield return new WaitForSeconds (5f);
+			yield return new WaitForSeconds (2f);
 
 			if (/*detectTimer >= detectWaitTime &&*/ state == EnemyBehaviorPositive.State.seeYou && sawPlayer) {
 				//				Debug.Log (sawPlayer)s;
