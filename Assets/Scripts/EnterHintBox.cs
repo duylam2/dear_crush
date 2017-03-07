@@ -9,20 +9,24 @@ public class EnterHintBox : MonoBehaviour {
 	GameObject textManager;
 	TextController textController;
 
+	public int differenceInCheckpoint;
+
 	// Use this for initialization
 	void Start () {
 		textManager = GameObject.Find ("TextManager");
 		textController = textManager.GetComponent<TextController> ();
-	}
+
+
+		}
 	
 	// Update is called once per frame
 	void Update () {
-		
+		differenceInCheckpoint = checkpointNumber - textController.currentLine;
 	}
 
 	void OnTriggerEnter(Collider other){
 		if (other.tag == "Player") {
-			if (textController.currentLine <= checkpointNumber) {
+			if (textController.currentLine <= checkpointNumber && differenceInCheckpoint == 0) {
 				textController.EnableTextBox ();
 				textController.currentLine = checkpointNumber;
 			}
@@ -31,7 +35,9 @@ public class EnterHintBox : MonoBehaviour {
 
 	void OnTriggerExit(Collider other){
 		if (other.tag == "Player") {
-			textController.DisableTextBox ();
+			if (differenceInCheckpoint == 0) {
+				textController.DisableTextBox ();
+			}
 		}
 	}
 }

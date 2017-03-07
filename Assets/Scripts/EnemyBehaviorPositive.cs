@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class EnemyBehaviorPositive : MonoBehaviour {
 
@@ -38,10 +39,23 @@ public class EnemyBehaviorPositive : MonoBehaviour {
 	public bool sawPlayer = false;
 	public bool detectedPlayer = false;
 
+	GameObject warningSign;
+	WarningSignBlink warningSignScript;
+
+	GameObject gameManager;
+	GameManager gameManagerScript;
+
 	// Use this for initialization
 	void Start () {
 		state = EnemyBehaviorPositive.State.notSeeYou;
 		//StartCoroutine ("FSM");
+
+		warningSign = GameObject.Find ("WarningSign");
+		warningSignScript = warningSign.GetComponent<WarningSignBlink> ();
+
+		gameManager = GameObject.Find ("GameManager");
+		gameManagerScript = gameManager.GetComponent<GameManager> ();
+
 	}
 
 	void Update() {
@@ -93,9 +107,11 @@ public class EnemyBehaviorPositive : MonoBehaviour {
 					//Debug.Log ("You are within range!");
 					sawPlayer = true;
 					state = EnemyBehaviorPositive.State.seeYou;
+					warningSignScript.StartBlink ();
 				} else {
 					//Debug.Log ("You are out of range!");
 					sawPlayer = false;
+					warningSignScript.StopBlink ();
 					//numberOfCoroutines = 0;
 					state = EnemyBehaviorPositive.State.notSeeYou;
 				}
@@ -209,6 +225,7 @@ public class EnemyBehaviorPositive : MonoBehaviour {
 	void detectYou(){
 		detectedPlayer = true;
 		this.GetComponent<MeshRenderer> ().material.color = Color.red;
+		gameManagerScript.PlayerLost ();
 		Debug.Log ("They detected you!");
 	}
 

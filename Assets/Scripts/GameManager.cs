@@ -2,10 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour {
 
-	public bool anEnemySawPlayer = false;
+	//public bool anEnemySawPlayer = false;
+
+	public Image letterToHold;
+	public GameObject letterOnTable;
+
+	public GameObject restartTextBox;
+
 
 	// Use this for initialization
 	void Start () {
@@ -14,16 +21,27 @@ public class GameManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetKey(KeyCode.R)){
-			SceneManager.LoadScene (SceneManager.GetActiveScene ().buildIndex);
+		if (restartTextBox.activeInHierarchy == true) {
+			if (Input.GetKey (KeyCode.R)) {
+				SceneManager.LoadScene (SceneManager.GetActiveScene ().buildIndex);
+			}
+		}
+
+		if (letterOnTable.GetComponent<MeshRenderer> ().enabled == false) {
+			letterToHold.enabled = true;
 		}
 	}
-		
-	void PlayerIsSeen(){
-		anEnemySawPlayer = true;
+
+	public void PlayerLost(){
+		restartTextBox.SetActive (true);
 	}
 
-	void PlayerIsNotSeen(){
-		anEnemySawPlayer = false;
-	}
+		
+//	void PlayerIsSeen(){
+//		anEnemySawPlayer = true;
+//	}
+//
+//	void PlayerIsNotSeen(){
+//		anEnemySawPlayer = false;
+//	}
 }
