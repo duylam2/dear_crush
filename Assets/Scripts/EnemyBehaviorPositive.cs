@@ -106,8 +106,8 @@ public class EnemyBehaviorPositive : MonoBehaviour {
 				if (hit.collider.tag == "Player") {
 					//Debug.Log ("You are within range!");
 					sawPlayer = true;
-					state = EnemyBehaviorPositive.State.seeYou;
 					warningSignScript.StartBlink ();
+					state = EnemyBehaviorPositive.State.seeYou;
 				} else {
 					//Debug.Log ("You are out of range!");
 					sawPlayer = false;
@@ -136,11 +136,10 @@ public class EnemyBehaviorPositive : MonoBehaviour {
 	}
 }
 
-	// Update is called once per frame
 	void notSeeYou () {
 		
 		//if (!sawPlayer) {
-			this.GetComponent<MeshRenderer> ().material.color = Color.white;
+		this.GetComponent<MeshRenderer> ().material.color = Color.white;
 		//}
 		//enemy rotating at place
 		enemyRotation = GetComponent<Transform>().localEulerAngles;

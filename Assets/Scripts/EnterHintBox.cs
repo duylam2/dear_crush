@@ -9,6 +9,8 @@ public class EnterHintBox : MonoBehaviour {
 	GameObject textManager;
 	TextController textController;
 
+	public GameObject loseScreen;
+
 	public int differenceInCheckpoint;
 
 	// Use this for initialization
@@ -26,9 +28,19 @@ public class EnterHintBox : MonoBehaviour {
 
 	void OnTriggerEnter(Collider other){
 		if (other.tag == "Player") {
-			if (textController.currentLine <= checkpointNumber && differenceInCheckpoint == 0) {
+			if (textController.currentLine <= checkpointNumber && differenceInCheckpoint <= 1) {
 				textController.EnableTextBox ();
 				textController.currentLine = checkpointNumber;
+			}
+		}
+	}
+
+	void OnTriggerStay(Collider other){
+		if (other.tag == "Player") {
+			if (textController.currentLine == 6) {
+				if (Input.GetKey(KeyCode.Space)) {
+					loseScreen.SetActive (true);
+				}
 			}
 		}
 	}

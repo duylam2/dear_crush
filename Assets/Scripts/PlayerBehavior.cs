@@ -10,6 +10,7 @@ public class PlayerBehavior : MonoBehaviour {
 	public Collider playerCol;
 
 	public GameObject restartTextBox;
+	public GameObject startScreen;
 
 	// Use this for initialization
 	void Start () {
@@ -22,7 +23,7 @@ public class PlayerBehavior : MonoBehaviour {
 		float vertical = Input.GetAxis ("Vertical");
 
 
-		if (restartTextBox.activeInHierarchy == false) {
+		if (restartTextBox.activeInHierarchy == false && startScreen.activeInHierarchy == false) {
 			charControl.Move ((transform.forward * vertical + transform.right * horizontal) * playerMoveSpeed * Time.deltaTime);
 			charControl.transform.Rotate (0f, Input.GetAxis ("Mouse X") * Time.deltaTime * 180f, 0f);
 		}

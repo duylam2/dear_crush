@@ -7,6 +7,7 @@ public class MouseLock : MonoBehaviour {
 	float upDownLook;
 
 	public GameObject restartTextBox;
+	public GameObject startScreen;
 
 	// Use this for initialization
 	void Start () {
@@ -24,10 +25,10 @@ public class MouseLock : MonoBehaviour {
 
 //		transform.Rotate (0f, mouseX, 0f);
 
-		upDownLook -= mouseY;
-		upDownLook = Mathf.Clamp (upDownLook, -45f, 45f);
+		if (restartTextBox.activeInHierarchy == false && startScreen.activeInHierarchy == false) {
+			upDownLook -= mouseY;
+			upDownLook = Mathf.Clamp (upDownLook, -45f, 45f);
 
-		if (restartTextBox.activeInHierarchy == false) {
 			transform.localEulerAngles = new Vector3 (upDownLook, transform.localEulerAngles.y, 0f);
 		}
 	}

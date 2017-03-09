@@ -13,7 +13,6 @@ public class TextController : MonoBehaviour {
 	public string[] textLines;
 
 	public int currentLine;
-	public int differenceInCheckpoint;
 
 	public PlayerBehavior player;
 

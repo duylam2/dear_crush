@@ -7,20 +7,15 @@ public class WarningSignBlink : MonoBehaviour {
 
 	public MaskableGraphic warningSign;
 
-	public float blinkInterval;
-	public float startDelay;
 	public bool currentState = false;
 	public bool defaultState = false;
 	public bool isBlinking = false;
-
-	EnemyBehaviorPositive enemyScript;
 
 	public AudioSource sound;
 
 
 	// Use this for initialization
 	void Start () {
-		enemyScript = GameObject.FindWithTag ("Enemy").GetComponent<EnemyBehaviorPositive> ();
 		warningSign.enabled = defaultState;
 	}
 	
@@ -41,7 +36,7 @@ public class WarningSignBlink : MonoBehaviour {
 //			InvokeRepeating ("BlinkingState", startDelay, blinkInterval);
 //		//}
 		//if (warningSign.enabled == false) {
-			warningSign.enabled = true;
+		warningSign.enabled = true;
 		//}
 		sound.Play();
 	}
