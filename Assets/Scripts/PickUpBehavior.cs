@@ -23,7 +23,7 @@ public class PickUpBehavior : MonoBehaviour {
 
 	void OnTriggerStay (Collider other){
 		if (other.gameObject.tag == "Player") {
-			Debug.Log ("letter");
+			//Debug.Log ("letter");
 			if (Input.GetKeyDown (KeyCode.Space)) {
 				
 				this.gameObject.GetComponent<MeshRenderer> ().enabled = false;

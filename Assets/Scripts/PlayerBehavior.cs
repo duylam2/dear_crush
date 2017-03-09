@@ -11,6 +11,7 @@ public class PlayerBehavior : MonoBehaviour {
 
 	public GameObject restartTextBox;
 	public GameObject startScreen;
+	public GameObject letterToRead;
 
 	// Use this for initialization
 	void Start () {
@@ -26,6 +27,12 @@ public class PlayerBehavior : MonoBehaviour {
 		if (restartTextBox.activeInHierarchy == false && startScreen.activeInHierarchy == false) {
 			charControl.Move ((transform.forward * vertical + transform.right * horizontal) * playerMoveSpeed * Time.deltaTime);
 			charControl.transform.Rotate (0f, Input.GetAxis ("Mouse X") * Time.deltaTime * 180f, 0f);
+
+			if (Input.GetKey (KeyCode.R)) {
+				letterToRead.SetActive (true);
+			} else {
+				letterToRead.SetActive (false);
+			}
 		}
 	}
 }
