@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerBehavior : MonoBehaviour {
 
@@ -13,9 +14,12 @@ public class PlayerBehavior : MonoBehaviour {
 	public GameObject startScreen;
 	public GameObject letterToRead;
 
+	public Image letterToHold;
+
 	// Use this for initialization
 	void Start () {
 		charControl = GetComponent<CharacterController> ();
+		letterToHold.enabled = false;
 	}
 	
 	// Update is called once per frame
@@ -30,6 +34,7 @@ public class PlayerBehavior : MonoBehaviour {
 
 			if (Input.GetKey (KeyCode.R)) {
 				letterToRead.SetActive (true);
+				letterToHold.enabled = false;
 			} else {
 				letterToRead.SetActive (false);
 			}

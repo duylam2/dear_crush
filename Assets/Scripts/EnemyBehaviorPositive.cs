@@ -77,6 +77,7 @@ public class EnemyBehaviorPositive : MonoBehaviour {
 			switch (state) {
 			case State.detectYou:
 				//numberOfCoroutines = 0;
+				detectedPlayer = true;
 				detectYou ();
 				break;
 			}
@@ -84,7 +85,7 @@ public class EnemyBehaviorPositive : MonoBehaviour {
 	}
 
 	void FixedUpdate(){
-		if (!detectedPlayer) {
+		if (!detectedPlayer || !sawPlayer) {
 			sawPlayer = false;
 			state = EnemyBehaviorPositive.State.notSeeYou;
 		}
@@ -140,6 +141,7 @@ public class EnemyBehaviorPositive : MonoBehaviour {
 		
 		//if (!sawPlayer) {
 		this.GetComponent<MeshRenderer> ().material.color = Color.white;
+
 		//}
 		//enemy rotating at place
 		enemyRotation = GetComponent<Transform>().localEulerAngles;
@@ -167,8 +169,8 @@ public class EnemyBehaviorPositive : MonoBehaviour {
 	}
 
 	void seeYou(){
-//		sawPlayer = true;
-		this.GetComponent<MeshRenderer> ().material.color = Color.yellow;
+		sawPlayer = true;
+//		this.GetComponent<MeshRenderer> ().material.color = Color.yellow;
 //		if (numberOfCoroutines == 0) {
 			numberOfCoroutines++;
 			StartCoroutine ("SeenCoroutine");
@@ -182,25 +184,25 @@ public class EnemyBehaviorPositive : MonoBehaviour {
 
 			if (!sawPlayer){
 				//Debug.Log ("Player is out of range!!");
-				this.GetComponent<MeshRenderer> ().material.color = Color.white;
+		//		this.GetComponent<MeshRenderer> ().material.color = Color.white;
 				break;
 			}
 
-			yield return new WaitForSeconds (1.25f);
+			yield return new WaitForSeconds (20f);
 
-			if (/*detectTimer >= detectWaitTime &&*/ state == EnemyBehaviorPositive.State.seeYou && sawPlayer) {
-				//				Debug.Log (sawPlayer)s;
-				state  = EnemyBehaviorPositive.State.detectYou;
+			if (state == EnemyBehaviorPositive.State.seeYou && sawPlayer == true) {
+				detectedPlayer = true;
+				state = EnemyBehaviorPositive.State.detectYou;
 				break;
 			}
 		}
 	}
 
 	void detectYou(){
-		detectedPlayer = true;
-		this.GetComponent<MeshRenderer> ().material.color = Color.red;
-		gameManagerScript.PlayerLost ();
 		Debug.Log ("They detected you!");
+		detectedPlayer = true;
+		//this.GetComponent<MeshRenderer> ().material.color = Color.red;
+		gameManagerScript.PlayerLost ();
 	}
 			
 }

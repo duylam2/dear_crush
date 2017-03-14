@@ -38,7 +38,7 @@ public class EnterHintBox : MonoBehaviour {
 	void OnTriggerStay(Collider other){
 		if (other.tag == "Player") {
 			if (textController.currentLine == 6) {
-				if (Input.GetKey(KeyCode.Space)) {
+				if (Input.GetKey(KeyCode.R)) {
 					loseScreen.SetActive (true);
 				}
 			}

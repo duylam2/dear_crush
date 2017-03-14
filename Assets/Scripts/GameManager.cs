@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour {
 	public GameObject startScreen;
 	public GameObject loseScreen;
 
+
 	// Use this for initialization
 	void Start () {
 		startScreen.SetActive (true);
@@ -48,15 +49,7 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void PlayerLost(){
+		
 		restartTextBox.SetActive (true);
 	}
-
-		
-//	void PlayerIsSeen(){
-//		anEnemySawPlayer = true;
-//	}
-//
-//	void PlayerIsNotSeen(){
-//		anEnemySawPlayer = false;
-//	}
 }
