@@ -1,55 +1,37 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class EnterHintBox : MonoBehaviour {
 
-	public int checkpointNumber;
+    public TextMeshProUGUI hintText;
+    public string hint;
 
-	GameObject textManager;
-	TextController textController;
+    // Use this for initialization
+    void Start()
+    {
 
-	public GameObject loseScreen;
+    }	
 
-	public int differenceInCheckpoint;
-
-	// Use this for initialization
-	void Start () {
-		textManager = GameObject.Find ("TextManager");
-		textController = textManager.GetComponent<TextController> ();
-
-
-		}
-	
 	// Update is called once per frame
-	void Update () {
-		differenceInCheckpoint = checkpointNumber - textController.currentLine;
+	void Update ()
+    {
+
+    }
+
+	void OnTriggerEnter(Collider other)
+    {
+        hintText.text = hint;
 	}
 
-	void OnTriggerEnter(Collider other){
-		if (other.tag == "Player") {
-			if (textController.currentLine <= checkpointNumber && differenceInCheckpoint <= 1) {
-				textController.EnableTextBox ();
-				textController.currentLine = checkpointNumber;
-			}
-		}
+	void OnTriggerStay(Collider other)
+    {
+
 	}
 
-	void OnTriggerStay(Collider other){
-		if (other.tag == "Player") {
-			if (textController.currentLine == 6) {
-				if (Input.GetKey(KeyCode.R)) {
-					loseScreen.SetActive (true);
-				}
-			}
-		}
-	}
+	void OnTriggerExit(Collider other)
+    {
 
-	void OnTriggerExit(Collider other){
-		if (other.tag == "Player") {
-			if (differenceInCheckpoint == 0) {
-				textController.DisableTextBox ();
-			}
-		}
 	}
 }
